@@ -1,6 +1,7 @@
 const express = require("express");
-const server = express();
+const morgan = require('morgan');
 
+const server = express();
 const PORT = 6060;
 
 
@@ -17,6 +18,7 @@ postgreDb
         server.use(express.json());
         server.use(express.urlencoded({ extended: false }));
 
+        server.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
         server.use(mainRouter);
 
 
