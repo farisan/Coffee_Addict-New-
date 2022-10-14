@@ -35,7 +35,7 @@ const register = async (req, res) => {
         const response = await userRepo.register(req.body);
         sendResponse.success(res, 200, {
             msg: "Register Success",
-            data: response.rows
+            data: response.data
         })
 
     } catch (err) {
@@ -49,7 +49,7 @@ const editPasswords = async (req, res) => {
     try {
         // console.log(req.query);
         const response = await userRepo.editPasswords(req.body);
-        console.log(response);
+        // console.log(response);
         sendResponse.success(res, 200, {
             msg: response.text = "Password has been changed",
             data: null
@@ -62,7 +62,10 @@ const editPasswords = async (req, res) => {
 };
 
 
+// profil
+const profil = async (req, res) => {
 
+}
 
 
 
@@ -72,6 +75,7 @@ const userController = {
     getId,
     register,
     editPasswords,
+    profil,
     // edit,
     // drop
 }
