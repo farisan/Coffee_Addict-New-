@@ -28,6 +28,7 @@ const getId = async (req, res) => {
     }
 };
 
+
 // register users
 const register = async (req, res) => {
     try {
@@ -43,6 +44,7 @@ const register = async (req, res) => {
     }
 
 };
+
 
 // edit password
 const editPasswords = async (req, res) => {
@@ -64,7 +66,6 @@ const editPasswords = async (req, res) => {
 
 // profil
 const profil = async (req, res) => {
-
 }
 
 

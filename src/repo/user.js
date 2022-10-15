@@ -33,6 +33,43 @@ const getUserId = (params) => {
 };
 
 
+// Register
+const register = (body) => {
+    return new Promise((resolve, reject) => {
+        let query = `insert into users (email, passwords, phone_number) values ($1, $2, $3) returning id, email`
+        const { email, passwords, phone_number } = body;
+        // Hash Password 
+        bcrypt.hash(passwords, 10, (err, hashedPasswords) => {
+            if (err) {
+                console.log(err);
+                return reject(err);
+            }
+            postgreDb.query(
+                query,
+                [email, hashedPasswords, phone_number],
+                (err, response) => {
+                    if (err) {
+                        console.log(err);
+                        return reject(err);
+                    }
+                    let getIDUsers = response.rows[0].id
+                    let load = {
+                        email: response.rows[0].email,
+                    }
+                    let query1 = `insert into datausers (users_id) values (${getIDUsers})`
+                    console.log(query1);
+                    postgreDb.query(query1, (err, queryResult) => {
+                        if (err) {
+                            return reject({ err })
+                        }
+                        resolve({ data: load.email, queryResult });
+                    })
+                });
+        })
+    });
+};
+
+
 // Create => Input data dalam body kedalam database
 // const register = (body) => {
 //     return new Promise((resolve, reject) => {
@@ -110,45 +147,6 @@ const profil = (body) => {
         const query = "insert into user ()"
     })
 }
-
-
-
-// Experiment
-const register = (body) => {
-    return new Promise((resolve, reject) => {
-        let query = `insert into users (email, passwords, phone_number) values ($1, $2, $3) returning id, email`
-        const { email, passwords, phone_number } = body;
-        // Hash Password 
-        bcrypt.hash(passwords, 10, (err, hashedPasswords) => {
-            if (err) {
-                console.log(err);
-                return reject(err);
-            }
-            postgreDb.query(
-                query,
-                [email, hashedPasswords, phone_number],
-                (err, response) => {
-                    if (err) {
-                        console.log(err);
-                        return reject(err);
-                    }
-                    let getIDUsers = response.rows[0].id
-                    let load = {
-                        email: response.rows[0].email,
-                    }
-                    let query1 = `insert into datausers (users_id) values (${getIDUsers})`
-                    console.log(query1);
-                    postgreDb.query(query1, (err, queryResult) => {
-                        if (err) {
-                            return reject({ err })
-                        }
-                        resolve({ data: load.email, queryResult });
-                    })
-                });
-        })
-    });
-};
-
 
 
 

@@ -13,7 +13,7 @@ module.exports = () => {
             (err, decodedPayload) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).json({ msg: "internal server error", data: null })
+                    return res.status(500).json({ msg: err.message, data: null })
                 }
 
                 // Payload akan di tempel ke object request

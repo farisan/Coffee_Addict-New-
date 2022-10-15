@@ -2,8 +2,9 @@
 const express = require("express");
 
 
-const userRouter = require("./user.js")                 // menghubungkan router utama ke router user
 const authRouter = require("./auth.js")
+const userRouter = require("./user.js")                 // menghubungkan router utama ke router user
+const productRouter = require("./product.js")
 
 const mainRouter = express.Router();
 
@@ -13,8 +14,9 @@ const prefix = "/coffee";
 
 
 // SubRoutes
-mainRouter.use(`${prefix}/users`, userRouter);        // localhost:6060/coffee/usersmainRouter.use(`${prefix}/users`, userRouter);
 mainRouter.use(`${prefix}/auth`, authRouter);
+mainRouter.use(`${prefix}/users`, userRouter);          // localhost:6060/coffee/users
+mainRouter.use(`${prefix}/product`, productRouter)      // localhost:6060/coffee/product
 
 
 
