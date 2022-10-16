@@ -1,18 +1,19 @@
 const postgreDb = require("../config/postgre")
 
 
+// filter category product
 const filter = (queryparams) => {
     return new Promise((resolve, reject) => {
-        let query = "select product.product_name ,category.category_name ,product.price ,product.stock ,product.image ,product.description from product left join category on product.category_id = category.id "
+        let query = "select * from product "
 
         const values = []
-        const whereparams = ["category_name"]
+        const whereparams = ["category"]
         // const whereparams = Object.key(queryparams).filter((key) =>
         //     ["category_name"].includes(key)
         // );
         if (whereparams.length > 0) query += "where ";
         whereparams.forEach((key) => {
-            query += `lower(category.${key}) like lower('%' || $${values.length + 1} || '%')`;
+            query += `lower(${key}) like lower('%' || $${values.length + 1} || '%')`;
             values.push(String(queryparams[key]))
         });
         // limit & offset untuk pagination
@@ -34,10 +35,10 @@ const filter = (queryparams) => {
 // belum ditambahkan berdasarkan favorit (qty)
 const search = (queryparams) => {
     return new Promise((resolve, reject) => {
-        let query = "select product.product_name ,category.category_name ,product.price ,product.stock ,product.image ,product.description from product inner join category on product.category_id = category.id ";
+        let query = "select * from product ";
 
         if (queryparams.name_product) {
-            query += `where lower(product_name) like lower('%${queryparams.name_product}%')`
+            query += `where lower(name) like lower('%${queryparams.name_product}%')`
         }
 
         if (queryparams.sorting == "low price") {
@@ -52,6 +53,9 @@ const search = (queryparams) => {
         if (queryparams.sorting == "hight date") {
             query += "order by create_at desc";
         }
+        if (queryparams.sorting == "favorite") {
+            query = "select product.*, transactions.qty from product inner join transactions on transactions.product_id = product.id order by transactions.qty desc";
+        }
 
         postgreDb.query(query, (err, result) => {
             if (err) {
@@ -60,16 +64,15 @@ const search = (queryparams) => {
             }
             return resolve(result);
         });
-
     })
 }
 
-const create = (body) => {
+const create = (body, file) => {
     return new Promise((resolve, reject) => {
-        const query = "insert into product (product_name, category_id, price, stock, image, description) values ($1,$2,$3,$4,$5,$6)"
-        const { product_name, category_id, price, stock, image, description } = body;
+        const query = "insert into product (name, category, size, price, stock, image, description) values ($1,$2,$3,$4,$5,$6,$7)"
+        const { name, category, size, price, stock, description } = body;
         postgreDb.query(
-            query, [product_name, category_id, price, stock, image, description], (err, queryResult) => {
+            query, [name, category, size, price, stock, file, description], (err, queryResult) => {
                 if (err) {
                     console.log(err);
                     return reject(err);

@@ -22,7 +22,7 @@ const search = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const response = await productRepo.create(req.body)
+        const response = await productRepo.create(req.body, req.file.path)
         sendResponse.success(res, 200, {
             msg: "Create Product Success",
         })

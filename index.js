@@ -19,6 +19,8 @@ postgreDb
         server.use(express.json());
         server.use(express.urlencoded({ extended: false }));
 
+        server.use(express.static("./public"))
+
         server.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
         server.use(mainRouter);
 

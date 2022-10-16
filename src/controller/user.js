@@ -42,7 +42,6 @@ const register = async (req, res) => {
     } catch (err) {
         sendResponse.error(res, 500, "Internal Server Error")
     }
-
 };
 
 
@@ -65,7 +64,15 @@ const editPasswords = async (req, res) => {
 
 
 // profil
-const profil = async (req, res) => {
+const profile = async (req, res) => {
+    try {
+        await userRepo.profile(req.body, req.params);
+        sendResponse.success(res, 200, {
+            msg: "Edit Profile Success"
+        })
+    } catch (err) {
+        sendResponse.error(res, 500, "Internal Server Error")
+    }
 }
 
 
@@ -76,8 +83,7 @@ const userController = {
     getId,
     register,
     editPasswords,
-    profil,
-    // edit,
+    profile,
     // drop
 }
 
