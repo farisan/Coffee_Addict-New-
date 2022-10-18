@@ -14,6 +14,23 @@ const getALL = () => {
     });
 }
 
+const historyTransactions = (queryparams) => {
+    return new Promise((resolve, reject) => {
+        let query = "select users.email, product.name, transactions.total, transactions.status from transactions inner join users on users.id = transactions.user_id inner join product on product.id = transactions.product_id ";
+
+        if (queryparams.email) {
+            query += `where lower(email) like lower('${queryparams.email}')`
+            postgreDb.query(query, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return reject(err);
+                }
+                return resolve(result);
+            });
+        }
+    })
+}
+
 const createTransactions = (body) => {
     return new Promise((resolve, reject) => {
         const query = "insert into transactions (user_id, product_id, promo_id, delivery_id, method_payment, qty, tax, total, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
@@ -29,7 +46,6 @@ const createTransactions = (body) => {
         )
     })
 }
-
 
 const editTransactions = (body, params) => {
     return new Promise((resolve, reject) => {
@@ -72,6 +88,7 @@ const dropTransactions = (params) => {
 
 const transactionsRepo = {
     getALL,
+    historyTransactions,
     createTransactions,
     editTransactions,
     dropTransactions

@@ -75,7 +75,17 @@ const profile = async (req, res) => {
     }
 }
 
-
+// drop users data
+const drop = async (req, res) => {
+    try {
+        await userRepo.deleteUser(req.params);
+        sendResponse.success(res, 200, {
+            msg: "Delete Profile Success",
+        })
+    } catch (err) {
+        sendResponse.error(res, 500, "Internal Server Error")
+    }
+}
 
 // Nama function di atas di bungkus menjadi object
 const userController = {
@@ -84,7 +94,7 @@ const userController = {
     register,
     editPasswords,
     profile,
-    // drop
+    drop
 }
 
 module.exports = userController;

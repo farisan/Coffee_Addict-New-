@@ -15,7 +15,7 @@ const login = (body) => {
                 console.log(err);
                 return reject({ err });
             }
-            if (response.rows.length === 0) return reject({ err: new Error("Email is WRONG!"), statusCode: 401 })
+            if (response.rows.length === 0) return reject({ err: new Error("Email or Passwords is WRONG!"), statusCode: 401 })
             // 2. Cek apakah password yang di input sama dengan di database ?
             const hashedPasswords = response.rows[0].passwords       // <= Get passwords from database
             bcrypt.compare(passwords, hashedPasswords, (err, isSame) => {
@@ -23,7 +23,7 @@ const login = (body) => {
                     console.log(err);
                     return reject({ err });
                 }
-                if (!isSame) return reject({ err: new Error("Passwords is WRONG!"), statusCode: 401 })
+                if (!isSame) return reject({ err: new Error("Email or Passwords is WRONG!"), statusCode: 401 })
 
                 // 3. Process Login => create jwt => return jwt to users
                 const payload = {

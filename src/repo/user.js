@@ -52,6 +52,7 @@ const register = (body) => {
                         console.log(err);
                         return reject(err);
                     }
+                    // untuk memasukan id dalam tabel users kedalam table profil
                     let getIDUsers = response.rows[0].id
                     let load = {
                         email: response.rows[0].email,
@@ -145,6 +146,32 @@ const profile = (body, params) => {
 }
 
 
+// delete users
+const deleteUser = (params) => {
+    return new Promise((resolve, reject) => {
+        // let query = `delete from users where id = ($1) returning id, email`
+        // delete tabel profil dahulu kemudian delete tabel users nya
+        let query = `delete from profile where users_id = $1 returning users_id`
+        postgreDb.query(
+            query,
+            [params.users_id],
+            (err, response) => {
+                if (err) {
+                    console.log(err);
+                    return reject(err);
+                }
+                console.log(params.id);
+                let query1 = `delete from users where id = (${params.users_id})`
+                console.log(query1);
+                postgreDb.query(query1, (err, result) => {
+                    if (err) {
+                        return reject({ err })
+                    }
+                    resolve(result);
+                })
+            });
+    })
+};
 
 
 
@@ -155,7 +182,7 @@ const userRepo = {
     register,
     editPasswords,
     profile,
-    // deleteUser
+    deleteUser
 
 }
 

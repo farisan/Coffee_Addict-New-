@@ -14,6 +14,14 @@ const get = async (req, res) => {
     }
 }
 
+const history = async (req, res) => {
+    try {
+        const response = await transactionsRepo.historyTransactions(req.query)
+        sendResponse.success(res, 200, response.rows)
+    } catch (err) {
+        sendResponse.error(res, 500, "Internal Server Error")
+    }
+}
 
 const create = async (req, res) => {
     try {
@@ -54,6 +62,7 @@ const drop = async (req, res) => {
 
 const transactionsController = {
     get,
+    history,
     create,
     edit,
     drop

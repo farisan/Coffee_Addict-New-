@@ -1,21 +1,22 @@
+const sendResponse = require("../helper/response.js")
+
 module.exports = {
     body: (...allowedKeys) => {
         return (req, res, next) => {
             const { body } = req;
-            const sanitizedKey = Object.key(body).filter((key) => {
+            const sanitizedKey = Object.keys(body).filter((key) =>
                 allowedKeys.includes(key)
-            });
-
-            // Apakah jumlah key di body sesuai dengan jumlah di allowedKeys
+            );
             const newBody = {};
             for (let key of sanitizedKey) {
                 Object.assign(newBody, { [key]: body[key] });
             }
-
-            // jika newBody kosong, response 400 bad request
-            // apakah setiap values sesuai dengan tipe data yang diinginkan
+            // apakah jumlah key di body sesuai dengan jumlah di allowedKeys
+            if (Object.keys(newBody).length === 0) return sendResponse.error(res, 400, { msg: "Input Key" })
+            // apakah setiap value sesuai dengan tipe data yang diinginkan
+            if (Object.keys(newBody).length !== allowedKeys.length) return sendResponse.error(res, 400, { msg: "Input body not same" })
             req.body = newBody;
             next();
-        }
+        };
     },
-}
+};

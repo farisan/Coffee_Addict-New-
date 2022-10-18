@@ -16,6 +16,11 @@ promoRouter.post("/", create);
 promoRouter.patch("/:id", edit);
 promoRouter.delete("/:id", drop);
 
+// promoRouter.get("/GetPromo", get);
+// promoRouter.get("/", search)
+// promoRouter.post("/", isLogin(), allowedRole('admin'), create);
+// promoRouter.patch("/:id", isLogin(), allowedRole('admin'), edit);
+// promoRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
 
 
 

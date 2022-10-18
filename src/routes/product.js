@@ -7,16 +7,21 @@ const allowedRole = require("../middleware/allowedRole.js")
 const uploadimages = require("../middleware/upload.js")
 
 
-const { filter, create, edit, drop, search } = require("../controller/product.js")
+const { search, create, edit, drop } = require("../controller/product.js")
 
 
 // Routes Tabel Product
-productRouter.get("/", filter);
+
 productRouter.get("/search", search);
 productRouter.post("/", uploadimages.single('image'), create);
 productRouter.patch("/:id", edit);
 productRouter.delete("/:id", drop);
 
+// productRouter.get("/", filter);
+// productRouter.get("/search", search);
+// productRouter.post("/", isLogin(), allowedRole('admin'), uploadimages.single('image'), create);
+// productRouter.patch("/:id", edit);
+// productRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
 
 
 

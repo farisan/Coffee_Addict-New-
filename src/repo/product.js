@@ -1,61 +1,46 @@
 const postgreDb = require("../config/postgre")
 
 
-// filter category product
-const filter = (queryparams) => {
-    return new Promise((resolve, reject) => {
-        let query = "select * from product "
-
-        const values = []
-        const whereparams = ["category"]
-        // const whereparams = Object.key(queryparams).filter((key) =>
-        //     ["category_name"].includes(key)
-        // );
-        if (whereparams.length > 0) query += "where ";
-        whereparams.forEach((key) => {
-            query += `lower(${key}) like lower('%' || $${values.length + 1} || '%')`;
-            values.push(String(queryparams[key]))
-        });
-        // limit & offset untuk pagination
-        const page = Number(queryparams.page);
-        const limit = Number(queryparams.limit);
-        const offset = (page - 1) * limit;
-        query += `limit $${values.length + 1} offset $${values.length + 2}`;
-        values.push(limit, offset);
-        postgreDb.query(query, values, (err, result) => {
-            if (err) {
-                console.log(err);
-                return reject(err)
-            }
-            return resolve(result)
-        })
-    })
-}
-
-// belum ditambahkan berdasarkan favorit (qty)
+// Get all
 const search = (queryparams) => {
     return new Promise((resolve, reject) => {
-        let query = "select * from product ";
+        let query = "select product.*, promo.code, promo.discount from product full join promo on promo.product_id = product.id ";
 
+        // Search name product
         if (queryparams.name_product) {
             query += `where lower(name) like lower('%${queryparams.name_product}%')`
         }
 
-        if (queryparams.sorting == "low price") {
+        // Filter category
+        if (queryparams.category) {
+            if (queryparams.name_product) {
+                query += `and lower(category) like lower('${queryparams.category}')`;
+            } else {
+                query += `where lower(category) like lower('${queryparams.category}')`;
+            }
+        }
+
+        if (queryparams.sorting == "cheapest") {
             query += "order by price asc";
         }
-        if (queryparams.sorting == "hight price") {
+        if (queryparams.sorting == "expensive") {
             query += "order by price desc";
         }
-        if (queryparams.sorting == "low date") {
+        if (queryparams.sorting == "newest") {
             query += "order by create_at asc";
         }
-        if (queryparams.sorting == "hight date") {
+        if (queryparams.sorting == "lates") {
             query += "order by create_at desc";
         }
         if (queryparams.sorting == "favorite") {
             query = "select product.*, transactions.qty from product inner join transactions on transactions.product_id = product.id order by transactions.qty desc";
         }
+
+
+        const page = Number(queryparams.page);
+        const limit = Number(queryparams.limit);
+        const offset = (page - 1) * limit;
+        query += ` limit ${limit} offset ${offset}`;
 
         postgreDb.query(query, (err, result) => {
             if (err) {
@@ -125,7 +110,6 @@ const drop = (params) => {
 
 
 const productRepo = {
-    filter,
     search,
     create,
     edit,

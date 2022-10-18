@@ -1,4 +1,4 @@
-// const response = require("../helper/response");
+const sendResponse = require("../helper/response");
 
 module.exports = (...allowedRole) => {
     return (req, res, next) => {
@@ -10,7 +10,7 @@ module.exports = (...allowedRole) => {
             break;
         }
         if (!isAllowed)
-            return res.status(403).json({ msg: "Forbidden", data: null });
+            return sendResponse.error(res, 403, { msg: "Forbidden", data: null })
         next();
     }
 }

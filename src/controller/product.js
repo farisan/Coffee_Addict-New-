@@ -1,15 +1,7 @@
 const productRepo = require("../repo/product.js")
 const sendResponse = require("../helper/response")
 
-const filter = async (req, res) => {
-    try {
-        // console.log(req.query);
-        const response = await productRepo.filter(req.query)
-        sendResponse.success(res, 200, response.rows)
-    } catch (err) {
-        sendResponse.error(res, 500, "internal server error")
-    }
-}
+
 
 const search = async (req, res) => {
     try {
@@ -22,7 +14,7 @@ const search = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const response = await productRepo.create(req.body, req.file.path)
+        await productRepo.create(req.body, req.file.path)
         sendResponse.success(res, 200, {
             msg: "Create Product Success",
         })
@@ -55,7 +47,6 @@ const drop = async (req, res) => {
 }
 
 const productController = {
-    filter,
     search,
     create,
     edit,
