@@ -14,18 +14,11 @@ const { get, getId, register, profile, editPasswords, drop } = require("../contr
 
 // Routes Tabel Users
 usersRouter.get("/", isLogin(), allowedRole('admin'), get);
-usersRouter.get("/getusers/:id", getId);
+usersRouter.get("/UserID", isLogin(), allowedRole('user'), getId);
 usersRouter.post("/", validate.body("email", "passwords", "phone_number"), register);
-usersRouter.patch("/profile/:users_id", profile)
-usersRouter.patch("/editPasswords", editPasswords)
-usersRouter.delete("/:users_id", drop)
-
-// usersRouter.get("/", isLogin(), allowedRole('admin'), get);
-// usersRouter.get("/getusers/:id", isLogin(), allowedRole('admin'), getId);
-// usersRouter.post("/", validate.body("email", "passwords", "phone_number"), register);
-// usersRouter.patch("/profile/:users_id", isLogin(), allowedRole('user'), profile)
-// usersRouter.patch("/editPasswords", isLogin(), allowedRole('user'), editPasswords)
-// usersRouter.delete("/:users_id", isLogin(), allowedRole('admin'), drop)
+usersRouter.patch("/profile", isLogin(), allowedRole('user'), uploadimages.single('image'), profile)
+usersRouter.patch("/editPasswords", isLogin(), allowedRole('admin', 'user'), editPasswords)
+usersRouter.delete("/", isLogin(), allowedRole('user'), drop)
 
 
 module.exports = usersRouter;

@@ -10,17 +10,12 @@ const { get, search, create, edit, drop } = require("../controller/promo.js")
 
 
 // Routes Tabel Product
+
 promoRouter.get("/GetPromo", get);
 promoRouter.get("/", search)
-promoRouter.post("/", create);
-promoRouter.patch("/:id", edit);
-promoRouter.delete("/:id", drop);
-
-// promoRouter.get("/GetPromo", get);
-// promoRouter.get("/", search)
-// promoRouter.post("/", isLogin(), allowedRole('admin'), create);
-// promoRouter.patch("/:id", isLogin(), allowedRole('admin'), edit);
-// promoRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
+promoRouter.post("/", isLogin(), allowedRole('admin'), create);
+promoRouter.patch("/:id", isLogin(), allowedRole('admin'), edit);
+promoRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
 
 
 

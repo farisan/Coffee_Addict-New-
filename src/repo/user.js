@@ -19,10 +19,10 @@ const getUser = () => {
 
 
 // GetId => Menampilkan data berdasarkan id users yang dicari
-const getUserId = (params) => {
+const getUserId = (token) => {
     return new Promise((resolve, reject) => {
         const query = "select users.email,users.passwords ,users.role ,users.phone_number , profile.displayname ,profile.firstname ,profile.lastname ,profile.gender ,profile.birthday ,profile.address ,profile.image, users.create_at ,users.update_at from users inner join profile on profile.users_id = users.id where id = $1";
-        postgreDb.query(query, [params.id], (err, result) => {
+        postgreDb.query(query, [token], (err, result) => {
             if (err) {
                 console.log(err);
                 return reject(err);
@@ -72,11 +72,11 @@ const register = (body) => {
 
 
 // Edit Only Password
-const editPasswords = (body) => {
+const editPasswords = (body, token) => {
     return new Promise((resolve, reject) => {
-        const { old_password, new_password, user_id } = body;
+        const { old_password, new_password } = body;
         const getPwdQuery = "select passwords from users where id = $1";
-        const getPwdValues = [user_id];
+        const getPwdValues = [token];
         postgreDb.query(getPwdQuery, getPwdValues, (err, response) => {
             if (err) {
                 console.log(err);
@@ -100,7 +100,7 @@ const editPasswords = (body) => {
                     }
                     const editPwdQuery =
                         "update users set passwords = $1 where id = $2";
-                    const editPwdValues = [newHashedPassword, user_id];
+                    const editPwdValues = [newHashedPassword, token];
                     postgreDb.query(
                         editPwdQuery,
                         editPwdValues,
@@ -120,14 +120,14 @@ const editPasswords = (body) => {
 
 
 // edit profil 
-const profile = (body, params) => {
+const profile = (body, token) => {
     return new Promise((resolve, reject) => {
         let query = "update profile set "
         const values = [];
         Object.keys(body).forEach((key, idx, array) => {
             if (idx === array.length - 1) {
-                query += `${key} = $${idx + 1} where users_id = $${idx + 2}`;
-                values.push(body[key], params.users_id);
+                query += `${key} = $${idx + 1} where users_id = $${idx + 2} returning *`;
+                values.push(body[key], token);
                 return;
             }
             query += `${key} = $${idx + 1},`;
@@ -147,21 +147,20 @@ const profile = (body, params) => {
 
 
 // delete users
-const deleteUser = (params) => {
+const deleteUser = (token) => {
     return new Promise((resolve, reject) => {
         // let query = `delete from users where id = ($1) returning id, email`
         // delete tabel profil dahulu kemudian delete tabel users nya
         let query = `delete from profile where users_id = $1 returning users_id`
         postgreDb.query(
             query,
-            [params.users_id],
+            [token],
             (err, response) => {
                 if (err) {
                     console.log(err);
                     return reject(err);
                 }
-                console.log(params.id);
-                let query1 = `delete from users where id = (${params.users_id})`
+                let query1 = `delete from users where id = (${token})`
                 console.log(query1);
                 postgreDb.query(query1, (err, result) => {
                     if (err) {

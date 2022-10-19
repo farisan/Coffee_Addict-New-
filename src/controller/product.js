@@ -14,9 +14,11 @@ const search = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        await productRepo.create(req.body, req.file.path)
+        const response = await productRepo.create(req.body, req.file.path)
+        response.rows[0].image = `images/${req.file.filename}`
         sendResponse.success(res, 200, {
             msg: "Create Product Success",
+            data: response.rows
         })
     } catch (err) {
         sendResponse.error(res, 500, "Internal Server Error")
@@ -25,10 +27,15 @@ const create = async (req, res) => {
 
 const edit = async (req, res) => {
     try {
-        await productRepo.edit(req.body, req.params)
+        if (req.file) {
+            req.body.image = req.file.path;
+        }
+        const response = await productRepo.edit(req.body, req.params)
+        console.log(response);
+        response.rows[0].image = `images/${req.file.filename}`
         sendResponse.success(res, 200, {
             msg: "Edit Data Success",
-            data: req.body
+            data: response.rows
         })
     } catch (err) {
         sendResponse.error(res, 500, "Internal Server Error")
@@ -37,9 +44,10 @@ const edit = async (req, res) => {
 
 const drop = async (req, res) => {
     try {
-        await productRepo.drop(req.params)
+        const response = await productRepo.drop(req.params)
         sendResponse.success(res, 200, {
             msg: "Delete Data Success",
+            data: response.rows
         })
     } catch (err) {
         sendResponse.error(res, 500, "Internal Server Error")

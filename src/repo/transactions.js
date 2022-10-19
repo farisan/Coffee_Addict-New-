@@ -14,20 +14,19 @@ const getALL = () => {
     });
 }
 
-const historyTransactions = (queryparams) => {
+const historyTransactions = (token) => {
     return new Promise((resolve, reject) => {
-        let query = "select users.email, product.name, transactions.total, transactions.status from transactions inner join users on users.id = transactions.user_id inner join product on product.id = transactions.product_id ";
+        let query = "select users.email, product.name, transactions.total, transactions.status from transactions inner join users on users.id = transactions.user_id inner join product on product.id = transactions.product_id where users.id = $1";
 
-        if (queryparams.email) {
-            query += `where lower(email) like lower('${queryparams.email}')`
-            postgreDb.query(query, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    return reject(err);
-                }
-                return resolve(result);
-            });
-        }
+
+        postgreDb.query(query, [token], (err, result) => {
+            if (err) {
+                console.log(err);
+                return reject(err);
+            }
+            return resolve(result);
+        });
+
     })
 }
 

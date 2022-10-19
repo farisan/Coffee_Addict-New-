@@ -42,6 +42,9 @@ const search = (queryparams) => {
         const offset = (page - 1) * limit;
         query += ` limit ${limit} offset ${offset}`;
 
+
+
+
         postgreDb.query(query, (err, result) => {
             if (err) {
                 console.log(err);
@@ -54,7 +57,7 @@ const search = (queryparams) => {
 
 const create = (body, file) => {
     return new Promise((resolve, reject) => {
-        const query = "insert into product (name, category, size, price, stock, image, description) values ($1,$2,$3,$4,$5,$6,$7)"
+        const query = "insert into product (name, category, size, price, stock, image, description) values ($1,$2,$3,$4,$5,$6,$7) returning *"
         const { name, category, size, price, stock, description } = body;
         postgreDb.query(
             query, [name, category, size, price, stock, file, description], (err, queryResult) => {
@@ -75,7 +78,7 @@ const edit = (body, params) => {
         // menggunakan perulangan untuk dapat melakukan pengubahan semua data pada table product
         Object.keys(body).forEach((key, idx, array) => {
             if (idx === array.length - 1) {
-                query += `${key} = $${idx + 1} where id = $${idx + 2}`;
+                query += `${key} = $${idx + 1} where id = $${idx + 2} returning *`;
                 values.push(body[key], params.id);
                 return;
             }
@@ -96,7 +99,7 @@ const edit = (body, params) => {
 
 const drop = (params) => {
     return new Promise((resolve, reject) => {
-        const query = "delete from product where id = $1";
+        const query = "delete from product where id = $1 returning *";
         postgreDb.query(query, [params.id], (err, result) => {
             if (err) {
                 console.log(err);

@@ -16,9 +16,11 @@ const get = async (req, res) => {
 
 const history = async (req, res) => {
     try {
-        const response = await transactionsRepo.historyTransactions(req.query)
+        const response = await transactionsRepo.historyTransactions(req.userPayload.user_id)
+        console.log(response);
         sendResponse.success(res, 200, response.rows)
     } catch (err) {
+        console.log(err);
         sendResponse.error(res, 500, "Internal Server Error")
     }
 }

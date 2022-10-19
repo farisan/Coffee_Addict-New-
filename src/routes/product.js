@@ -12,16 +12,11 @@ const { search, create, edit, drop } = require("../controller/product.js")
 
 // Routes Tabel Product
 
-productRouter.get("/search", search);
-productRouter.post("/", uploadimages.single('image'), create);
-productRouter.patch("/:id", edit);
-productRouter.delete("/:id", drop);
 
-// productRouter.get("/", filter);
-// productRouter.get("/search", search);
-// productRouter.post("/", isLogin(), allowedRole('admin'), uploadimages.single('image'), create);
-// productRouter.patch("/:id", edit);
-// productRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
+productRouter.get("/search", search);
+productRouter.post("/", isLogin(), allowedRole('admin'), uploadimages.single('image'), create);
+productRouter.patch("/:id", isLogin(), allowedRole('admin'), uploadimages.single('image'), edit);
+productRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
 
 
 
