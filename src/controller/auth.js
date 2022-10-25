@@ -25,7 +25,7 @@ const logout = async (req, res) => {
         })
 
     } catch (err) {
-        sendResponse.error(res, 500, err.message)
+        sendResponse.error(res, 400, err.message)
     }
 }
 

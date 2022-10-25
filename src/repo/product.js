@@ -75,8 +75,6 @@ const search = (queryparams, hostAPI) => {
                     console.log(err);
                     return reject(err);
                 }
-                console.log(queryresult);
-                console.log(queryLimit);
                 if (queryresult.rows.length == 0) return reject(new Error("Product Not Found"))
                 let resNext = null;
                 let resPrev = null;
@@ -88,6 +86,7 @@ const search = (queryparams, hostAPI) => {
                     let next = "";
                     let prev = "";
                     const dataNext = Math.ceil(result.rowCount / limit);
+                    console.log(queryresult);
                     if (start <= result.rowCount) {
                         next = page + 1;
                     }
@@ -105,7 +104,7 @@ const search = (queryparams, hostAPI) => {
                         next: resNext,
                         prev: resPrev,
                         totalPage: Math.ceil(result.rowCount / limit),
-                        data: result.rows,
+                        data: queryresult.rows,
                     };
                     return resolve(sendResponse)
                 }
@@ -114,7 +113,7 @@ const search = (queryparams, hostAPI) => {
                     next: resNext,
                     prev: resPrev,
                     totalPage: null,
-                    data: result.rows,
+                    data: queryresult.rows,
                 }
                 return resolve(sendResponse)
             })

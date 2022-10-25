@@ -34,7 +34,7 @@ const login = (body) => {
                     email: response.rows[0].email,
                     role: response.rows[0].role
                 }
-                // jwtr.sign(
+                // jwt.sign(
                 //     payload,
                 //     process.env.SECRET_KEY,
                 //     {

@@ -37,7 +37,7 @@ const historyTransactions = (queryparams, token) => {
         let query = "select users.email, product.name, transactions.total, transactions.status from transactions inner join users on users.id = transactions.user_id inner join product on product.id = transactions.product_id where users.id = $1";
 
         let queryLimit = "";
-        let link = `http://localhost:6060/coffee/transactions/?`
+        let link = `http://localhost:6060/coffee/transactions/history?`
 
 
         let values = [token];
@@ -52,16 +52,20 @@ const historyTransactions = (queryparams, token) => {
         }
 
 
-        console.log(queryLimit);
+        // console.log(queryLimit);
         postgreDb.query(query, [token], (err, result) => {
+            if (err) {
+                console.log(err);
+                return reject(new Error("Internal Server Error"))
+            }
             postgreDb.query(queryLimit, values, (err, queryresult) => {
-                console.log(queryresult);
+                // console.log(queryresult);
                 if (err) {
                     console.log(err);
                     return reject(err);
                 }
-                console.log(queryresult);
-                console.log(queryLimit);
+                // console.log(queryresult);
+                // console.log(queryLimit);
                 if (queryresult.rows.length == 0) return reject(new Error("History Not Found"))
                 let resNext = null;
                 let resPrev = null;
@@ -90,8 +94,9 @@ const historyTransactions = (queryparams, token) => {
                         next: resNext,
                         prev: resPrev,
                         totalPage: Math.ceil(result.rowCount / limit),
-                        data: result.rows,
+                        data: queryresult.rows,
                     };
+                    // console.log(result);
                     return resolve(sendResponse)
                 }
                 let sendResponse = {
@@ -99,8 +104,9 @@ const historyTransactions = (queryparams, token) => {
                     next: resNext,
                     prev: resPrev,
                     totalPage: null,
-                    data: result.rows,
+                    data: queryresult.rows,
                 }
+
                 return resolve(sendResponse)
             })
         });

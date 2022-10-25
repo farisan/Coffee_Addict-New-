@@ -16,8 +16,8 @@ const get = async (req, res) => {
 
 const history = async (req, res) => {
     try {
-        const response = await transactionsRepo.historyTransactions(req.params, req.userPayload.user_id)
-        console.log(response);
+        const response = await transactionsRepo.historyTransactions(req.query, req.userPayload.user_id)
+        // console.log(response);
         sendResponse.success(res, 200, response)
     } catch (err) {
         console.log(err);
