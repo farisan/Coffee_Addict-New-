@@ -16,12 +16,12 @@ const get = async (req, res) => {
 
 const history = async (req, res) => {
     try {
-        const response = await transactionsRepo.historyTransactions(req.userPayload.user_id)
+        const response = await transactionsRepo.historyTransactions(req.params, req.userPayload.user_id)
         console.log(response);
-        sendResponse.success(res, 200, response.rows)
+        sendResponse.success(res, 200, response)
     } catch (err) {
         console.log(err);
-        sendResponse.error(res, 500, "Internal Server Error")
+        sendResponse.error(res, 500, err.message)
     }
 }
 

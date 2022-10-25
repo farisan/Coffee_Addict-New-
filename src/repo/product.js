@@ -4,53 +4,120 @@ const postgreDb = require("../config/postgre")
 // Get all
 const search = (queryparams) => {
     return new Promise((resolve, reject) => {
+
+
         let query = "select product.*, promo.code, promo.discount from product full join promo on promo.product_id = product.id ";
+
+        let queryLimit = "";
+        let link = `http://localhost:6060/coffee/product?`
+
 
         // Search name product
         if (queryparams.name_product) {
             query += `where lower(name) like lower('%${queryparams.name_product}%')`
+            link += `name_product=${queryparams.name_product}&`
         }
 
         // Filter category
         if (queryparams.category) {
             if (queryparams.name_product) {
                 query += `and lower(category) like lower('${queryparams.category}')`;
+                link += `category=${queryparams.category}&`
             } else {
                 query += `where lower(category) like lower('${queryparams.category}')`;
+                link += `category=${queryparams.category}&`
             }
         }
 
         if (queryparams.sorting == "cheapest") {
             query += "order by price asc";
+            link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "expensive") {
             query += "order by price desc";
+            link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "newest") {
             query += "order by create_at asc";
+            link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "lates") {
             query += "order by create_at desc";
+            link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "favorite") {
             query = "select product.*, transactions.qty from product inner join transactions on transactions.product_id = product.id order by transactions.qty desc";
+            link += `sorting=${queryparams.sorting}&`
         }
 
 
-        const page = Number(queryparams.page);
-        const limit = Number(queryparams.limit);
-        const offset = (page - 1) * limit;
-        query += ` limit ${limit} offset ${offset}`;
+        // const page = Number(queryparams.page);
+        // const limit = Number(queryparams.limit);
+        // const offset = (page - 1) * limit;
+        // query += ` limit ${limit} offset ${offset}`;
 
+        let values = [];
+        if (queryparams.page && queryparams.limit) {
+            let page = parseInt(queryparams.page);
+            let limit = parseInt(queryparams.limit);
+            let offset = (page - 1) * limit;
+            queryLimit = query + ` limit $1 offset $2`;
+            values.push(limit, offset);
+        } else {
+            queryLimit = query;
+        }
 
 
 
         postgreDb.query(query, (err, result) => {
-            if (err) {
-                console.log(err);
-                return reject(err);
-            }
-            return resolve(result);
+            postgreDb.query(queryLimit, values, (err, queryresult) => {
+                if (err) {
+                    console.log(err);
+                    return reject(err);
+                }
+                console.log(queryresult);
+                console.log(queryLimit);
+                if (queryresult.rows.length == 0) return reject(new Error("Product Not Found"))
+                let resNext = null;
+                let resPrev = null;
+                if (queryparams.page && queryparams.limit) {
+                    let page = parseInt(queryparams.page);
+                    let limit = parseInt(queryparams.limit);
+                    let start = (page - 1) * limit;
+                    let end = page * limit;
+                    let next = "";
+                    let prev = "";
+                    const dataNext = Math.ceil(result.rowCount / limit);
+                    if (start <= result.rowCount) {
+                        next = page + 1;
+                    }
+                    if (end > 0) {
+                        prev = page - 1;
+                    }
+                    if (parseInt(next) <= parseInt(dataNext)) {
+                        resNext = `${link}page=${next}&limit=${limit}`;
+                    }
+                    if (parseInt(prev) !== 0) {
+                        resPrev = `${link}page=${prev}&limit=${limit}`;
+                    }
+                    let sendResponse = {
+                        dataCount: result.rowCount,
+                        next: resNext,
+                        prev: resPrev,
+                        totalPage: Math.ceil(result.rowCount / limit),
+                        data: result.rows,
+                    };
+                    return resolve(sendResponse)
+                }
+                let sendResponse = {
+                    dataCount: result.rowCount,
+                    next: resNext,
+                    prev: resPrev,
+                    totalPage: null,
+                    data: result.rows,
+                }
+                return resolve(sendResponse)
+            })
         });
     })
 }

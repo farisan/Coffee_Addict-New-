@@ -6,9 +6,9 @@ const sendResponse = require("../helper/response")
 const search = async (req, res) => {
     try {
         const response = await productRepo.search(req.query)
-        sendResponse.success(res, 200, response.rows)
+        sendResponse.success(res, 200, response)
     } catch (err) {
-        sendResponse.error(res, 500, "Internal Server Error")
+        sendResponse.error(res, 500, err.message)
     }
 }
 

@@ -22,5 +22,18 @@ module.exports = {
         };
     },
 
-    // belum ditambahkan validate params, dan queryparams
+    params: (...allowedKeys) => {
+        return (req, res, next) => {
+            const { params } = req;
+            const sanitizedKey = Object.keys(params).filter((key) =>
+                allowedKeys.includes(key)
+            );
+            const newParams = {};
+            for (let key of sanitizedKey) {
+                Object.assign(newParams, { [key]: params[key] });
+            }
+            req.body = newParams;
+            next();
+        };
+    },
 };

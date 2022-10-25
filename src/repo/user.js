@@ -36,40 +36,55 @@ const getUserId = (token) => {
 // Register
 const register = (body) => {
     return new Promise((resolve, reject) => {
-        let query = `insert into users (email, passwords, phone_number) values ($1, $2, $3) returning id, email`
+        let query = `insert into users (email, passwords, phone_number) values ($1, $2, $3) returning id, email`;
         const { email, passwords, phone_number } = body;
-        // Hash Password 
-        bcrypt.hash(passwords, 10, (err, hashedPasswords) => {
-            if (err) {
-                console.log(err);
-                return reject(err);
+        const validasiEmail = `select email from users where email like $1`;
+        const validasiPhone = `select phone_number from users where phone_number like $1`;
+        postgreDb.query(validasiEmail, [email], (err, resEmail) => {
+            if (err) return reject(err);
+            if (resEmail.rows.length > 0) {
+                return reject(new Error("Email already used"));
             }
-            postgreDb.query(
-                query,
-                [email, hashedPasswords, phone_number],
-                (err, response) => {
+            postgreDb.query(validasiPhone, [phone_number], (err, resPhone) => {
+                if (err) return reject(err);
+                if (resPhone.rows.length > 0) {
+                    return reject(new Error("Number already used"));
+                }
+
+                // Hash Password
+                bcrypt.hash(passwords, 10, (err, hashedPasswords) => {
                     if (err) {
                         console.log(err);
                         return reject(err);
                     }
-                    // untuk memasukan id dalam tabel users kedalam table profil
-                    let getIDUsers = response.rows[0].id
-                    let load = {
-                        email: response.rows[0].email,
-                    }
-                    let query1 = `insert into profile (users_id) values (${getIDUsers})`
-                    console.log(query1);
-                    postgreDb.query(query1, (err, queryResult) => {
-                        if (err) {
-                            return reject({ err })
+                    postgreDb.query(
+                        query,
+                        [email, hashedPasswords, phone_number],
+                        (err, response) => {
+                            if (err) {
+                                console.log(err);
+                                return reject(err);
+                            }
+                            // untuk memasukan id dalam tabel users kedalam table profil
+                            let getIDUsers = response.rows[0].id;
+                            let load = {
+                                email: response.rows[0].email,
+                            };
+                            let query1 = `insert into profile (users_id) values (${getIDUsers})`;
+                            console.log(query1);
+                            postgreDb.query(query1, (err, queryResult) => {
+                                if (err) {
+                                    return reject({ err });
+                                }
+                                resolve({ data: load.email, queryResult });
+                            });
                         }
-                        resolve({ data: load.email, queryResult });
-                    })
+                    );
                 });
-        })
+            });
+        });
     });
 };
-
 
 // Edit Only Password
 const editPasswords = (body, token) => {
@@ -161,7 +176,7 @@ const deleteUser = (token) => {
                     return reject(err);
                 }
                 let query1 = `delete from users where id = (${token})`
-                console.log(query1);
+                console.log(response);
                 postgreDb.query(query1, (err, result) => {
                     if (err) {
                         return reject({ err })

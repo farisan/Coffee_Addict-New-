@@ -42,7 +42,7 @@ const register = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        sendResponse.error(res, 500, "Email already used")
+        sendResponse.error(res, 500, err.message)
     }
 };
 
@@ -73,13 +73,14 @@ const profile = async (req, res) => {
             req.body.image = req.file.path;
         }
         const response = await userRepo.profile(req.body, req.userPayload.user_id);
-        response.rows[0].image = `images/${req.file.filename}`
+        // response.rows[0].image = `images/${req.file.filename}`
         sendResponse.success(res, 200, {
             msg: "Edit Profile Success",
             data: response.rows,
 
         })
     } catch (err) {
+        console.log(err);
         sendResponse.error(res, 500, "Internal Server Error")
     }
 }
