@@ -5,17 +5,20 @@ const productRouter = express.Router();
 const isLogin = require("../middleware/isLogin.js")
 const allowedRole = require("../middleware/allowedRole.js")
 const uploadimages = require("../middleware/upload.js")
+const sendResponse = require("../helper/response")
 const multer = require("multer");
 function uploadFile(req, res, next) {
     const upload = uploadimages.single('image');
 
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
-            // A Multer error occurred when uploading.
-            res.json('Size image minimum 5mb')
+            // Error limit size
+            // return res.json('Size image max 5mb')
+            return sendResponse.error(res, 415, 'Size image max 5mb')
         } else if (err) {
             // Error File format
-            res.json('Format image Wrong!')
+            // return res.json('Format image must png, jpg or jpeg!')
+            return sendResponse.error(res, 415, 'Format image must png, jpg or jpeg!')
         }
         // Everything went fine. 
         next()

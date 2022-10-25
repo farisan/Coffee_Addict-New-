@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./src/config/redis");
 const express = require("express");
 const morgan = require('morgan');
 

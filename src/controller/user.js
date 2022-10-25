@@ -72,6 +72,7 @@ const profile = async (req, res) => {
         if (req.file) {
             req.body.image = req.file.path;
         }
+        console.log(req.body);
         const response = await userRepo.profile(req.body, req.userPayload.user_id);
         // response.rows[0].image = `images/${req.file.filename}`
         sendResponse.success(res, 200, {
@@ -81,7 +82,7 @@ const profile = async (req, res) => {
         })
     } catch (err) {
         console.log(err);
-        sendResponse.error(res, 500, "Internal Server Error")
+        sendResponse.error(res, 500, "internal server error")
     }
 }
 

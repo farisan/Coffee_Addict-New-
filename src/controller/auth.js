@@ -1,6 +1,7 @@
 const authRepo = require('../repo/auth');
 const sendResponse = require("../helper/response")
 
+const client = require("../config/redis");
 
 const login = async (req, res) => {
     try {
@@ -16,9 +17,21 @@ const login = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    try {
+        const response = await authRepo.logout(req.userPayload)
+        sendResponse.success(res, 200, {
+            msg: "Logout Success",
+        })
+
+    } catch (err) {
+        sendResponse.error(res, 500, err.message)
+    }
+}
 
 const authController = {
-    login
+    login,
+    logout
 }
 
 module.exports = authController;

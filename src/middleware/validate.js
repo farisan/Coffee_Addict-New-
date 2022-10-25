@@ -11,12 +11,16 @@ module.exports = {
             for (let key of sanitizedKey) {
                 Object.assign(newBody, { [key]: body[key] });
             }
+            console.log(body);
             // Pengecekan key body tidak boleh kosong
-            if (Object.keys(newBody).length === 0) return sendResponse.error(res, 400, { msg: "Input Key" })
+            // if (Object.keys(newBody).length === 0) return sendResponse.error(res, 400, { msg: "Input Key" })
             // Pengecekan key body harus sama dengan yang diisi di routes validate
-            if (Object.keys(newBody).length !== allowedKeys.length) return sendResponse.error(res, 400, { msg: "Input body not same" })
+            // if (Object.keys(newBody).length !== allowedKeys.length) return sendResponse.error(res, 400, { msg: "Input body not same" })
             // if (Object.keys(newBody).length >= allowedKeys.length) 
             // return sendResponse.error(res, 400, { msg: "Input body over" })
+            if (!req.file) {
+                if (Object.keys(newBody).length === 0) return sendResponse.error(res, 400, { msg: "Input Key" })
+            }
             req.body = newBody;
             next();
         };
@@ -32,7 +36,7 @@ module.exports = {
             for (let key of sanitizedKey) {
                 Object.assign(newParams, { [key]: params[key] });
             }
-            req.body = newParams;
+            req.params = newParams;
             next();
         };
     },

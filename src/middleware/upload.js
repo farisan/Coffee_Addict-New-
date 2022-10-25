@@ -22,9 +22,9 @@ const upload = multer({
         ) {
             cb(null, true);
         } else {
-            return cb(new Error("Invalid file type"));
+            return cb(new Error("Format image must png, jpg or jpeg!"));
         }
     },
-    limits: { fileSize: 5e6 },
+    limits: { fileSize: 2e6 },
 });
 module.exports = upload;

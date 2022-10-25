@@ -2,14 +2,14 @@ const postgreDb = require("../config/postgre")
 
 
 // Get all
-const search = (queryparams) => {
+const search = (queryparams, hostAPI) => {
     return new Promise((resolve, reject) => {
 
 
         let query = "select product.*, promo.code, promo.discount from product full join promo on promo.product_id = product.id ";
 
         let queryLimit = "";
-        let link = `http://localhost:6060/coffee/product?`
+        let link = `${hostAPI}/coffee/product?`
 
 
         // Search name product

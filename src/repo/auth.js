@@ -1,12 +1,15 @@
 const postgreDb = require('../config/postgre.js');
+const jwt = require("jsonwebtoken");
+const JWTR = require("jwt-redis").default;
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const client = require("../config/redis");
 
 
 // Login Authentikasi
 const login = (body) => {
     return new Promise((resolve, reject) => {
         const { email, passwords } = body;
+        const jwtr = new JWTR(client);
         // 1. Cek apakah ada email yang sama di database ?
         const getPasswordsByEmailValues = "select id, email, passwords, role from users where email = $1"
         const getPasswordsEmailValues = [email];
@@ -31,21 +34,30 @@ const login = (body) => {
                     email: response.rows[0].email,
                     role: response.rows[0].role
                 }
-                jwt.sign(
-                    payload,
-                    process.env.SECRET_KEY,
-                    {
+                // jwtr.sign(
+                //     payload,
+                //     process.env.SECRET_KEY,
+                //     {
+                //         expiresIn: "1d",
+                //         issuer: process.env.ISSUER,
+                //     },
+                //     (err, token) => {
+                //         if (err) {
+                //             console.log(err);
+                //             return reject({ err });
+                //         }
+                //         return resolve({ role: payload.role, token })
+                //     }
+                // )
+                jwtr
+                    .sign(payload, process.env.SECRET_KEY, {
                         expiresIn: "5m",
                         issuer: process.env.ISSUER,
-                    },
-                    (err, token) => {
-                        if (err) {
-                            console.log(err);
-                            return reject({ err });
-                        }
-                        return resolve({ role: payload.role, token })
-                    }
-                )
+                    })
+                    .then((token) => {
+                        // Token verification
+                        return resolve({ role: payload.role, token });
+                    });
             })
         })
 
@@ -53,10 +65,22 @@ const login = (body) => {
 }
 
 
+const logout = (token) => {
+    return new Promise((resolve, reject) => {
+        const jwtr = new JWTR(client);
+        jwtr.destroy(token.jti).then((res) => {
+            if (!res) reject(new Error("Login First"), statusCode);
+            return resolve();
+        });
+    });
+};
+
+
 
 
 const authRepo = {
     login,
+    logout,
 };
 
 module.exports = authRepo;
