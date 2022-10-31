@@ -27,7 +27,7 @@ const history = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        await transactionsRepo.createTransactions(req.body)
+        await transactionsRepo.createTransactions(req.body, req.userPayload.user_id)
         sendResponse.success(res, 200, {
             data: "Create data success"
         })

@@ -16,8 +16,8 @@ const search = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const response = await productRepo.create(req.body, req.file.path)
-        response.rows[0].image = `images/${req.file.filename}`
+
+        const response = await productRepo.create(req.body, req.file.filename)
         sendResponse.success(res, 200, {
             msg: "Create Product Success",
             data: response.rows
@@ -30,11 +30,9 @@ const create = async (req, res) => {
 const edit = async (req, res) => {
     try {
         if (req.file) {
-            req.body.image = req.file.path;
+            req.body.image = `${req.file.filename}`;
         }
         const response = await productRepo.edit(req.body, req.params)
-        console.log(response);
-        response.rows[0].image = `images/${req.file.filename}`
         sendResponse.success(res, 200, {
             msg: "Edit Data Success",
             data: response.rows

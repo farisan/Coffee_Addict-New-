@@ -46,7 +46,7 @@ const search = (queryparams, hostAPI) => {
             link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "favorite") {
-            query = "select product.*, transactions.qty from product inner join transactions on transactions.product_id = product.id order by transactions.qty desc";
+            query = "select product.*, transactions.qty from product left join transactions on transactions.product_id = product.id order by transactions.qty desc";
             link += `sorting=${queryparams.sorting}&`
         }
 

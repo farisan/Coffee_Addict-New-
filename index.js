@@ -3,6 +3,17 @@ require("./src/config/redis");
 const express = require("express");
 const morgan = require('morgan');
 
+
+
+// Cors => menerima inputan dari luar port
+const cors = require('cors');
+// const corsOPSTIONS = {
+//     origin: "http://localhost:3000",
+//     credentials: true,
+//     optionsSuccessStatus: 200,
+// }
+
+
 const server = express();
 const PORT = 6060;
 
@@ -19,8 +30,8 @@ postgreDb
         // untuk dapat digunakan isi data nya di json atau urlencode
         server.use(express.json());
         server.use(express.urlencoded({ extended: false }));
-
-        server.use(express.static("./public"))
+        server.use(cors());
+        server.use(express.static("./public/images"))
 
         server.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
         server.use(mainRouter);
