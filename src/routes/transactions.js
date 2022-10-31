@@ -16,7 +16,7 @@ const { get, history, create, edit, drop } = require("../controller/transactions
 
 transactionsRouter.get("/", isLogin(), allowedRole('admin'), get);
 transactionsRouter.get("/history", isLogin(), allowedRole('user'), history)
-transactionsRouter.post("/", isLogin(), allowedRole('admin'), create);
+transactionsRouter.post("/", isLogin(), allowedRole('user'), create);
 transactionsRouter.patch("/:id", isLogin(), allowedRole('admin'), edit);
 transactionsRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
 
