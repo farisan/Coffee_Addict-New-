@@ -39,7 +39,7 @@ mainRouter.use(`${prefix}/transactions`, transactionsRouter)      // localhost:6
 // http://ocalhost:6060/
 mainRouter.get("/", (req, res) => {
     res.json({
-        msg: "Berjalan dengan Lancar",
+        msg: "Berjalan dengan baik",
     })
 })
 
