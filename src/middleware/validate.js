@@ -18,9 +18,9 @@ module.exports = {
             // if (Object.keys(newBody).length !== allowedKeys.length) return sendResponse.error(res, 400, { msg: "Input body not same" })
             // if (Object.keys(newBody).length >= allowedKeys.length) 
             // return sendResponse.error(res, 400, { msg: "Input body over" })
-            if (!req.file) {
-                if (Object.keys(newBody).length === 0) return sendResponse.error(res, 400, { msg: "Input Key" })
-            }
+            // if (!req.file) {
+            //     if (Object.keys(newBody).length === 0) return sendResponse.error(res, 400, { msg: "Input Key" })
+            // }
             req.body = newBody;
             next();
         };
