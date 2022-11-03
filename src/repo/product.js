@@ -121,6 +121,19 @@ const search = (queryparams, hostAPI) => {
     })
 }
 
+const getid = (params) => {
+    return new Promise((resolve, reject) => {
+        const query = "select * from product where id = $1";
+        postgreDb.query(query, [params.id], (err, result) => {
+            if (err) {
+                console.log(err);
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+};
+
 const create = (body, file) => {
     return new Promise((resolve, reject) => {
         const query = "insert into product (name, category, size, price, stock, image, description) values ($1,$2,$3,$4,$5,$6,$7) returning *"
@@ -180,6 +193,7 @@ const drop = (params) => {
 
 const productRepo = {
     search,
+    getid,
     create,
     edit,
     drop,

@@ -14,6 +14,18 @@ const search = async (req, res) => {
     }
 }
 
+const getid = async (req, res) => {
+    try {
+        const response = await productRepo.getid(req.params)
+        console.log(response);
+        sendResponse.success(res, 200, {
+            data: response.rows
+        })
+    } catch (err) {
+        sendResponse.error(res, 500, "Internal Server Error")
+    }
+}
+
 const create = async (req, res) => {
     try {
 
@@ -56,6 +68,7 @@ const drop = async (req, res) => {
 
 const productController = {
     search,
+    getid,
     create,
     edit,
     drop,

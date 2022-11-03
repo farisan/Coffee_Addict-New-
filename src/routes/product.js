@@ -25,13 +25,14 @@ function uploadFile(req, res, next) {
     })
 }
 
-const { search, create, edit, drop } = require("../controller/product.js")
+const { search, getid, create, edit, drop } = require("../controller/product.js")
 
 
 // Routes Tabel Product
 
 
 productRouter.get("/", search);
+productRouter.get("/:id", getid);
 productRouter.post("/", isLogin(), allowedRole('admin'), uploadFile, create);
 productRouter.patch("/:id", isLogin(), allowedRole('admin'), uploadFile, edit);
 productRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
