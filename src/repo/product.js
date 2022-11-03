@@ -46,7 +46,7 @@ const search = (queryparams, hostAPI) => {
             link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "favorite") {
-            query = "select product.*, transactions.qty from product left join transactions on transactions.product_id = product.id order by transactions.qty desc";
+            query = "select pr.*,p.code,p.valid,p.discount,COALESCE(sum(tr.qty),0) as sold from product pr left join promo p on pr.id = p.product_id left join transactions tr on pr.id = tr.product_id GROUP BY pr.id,p.code,p.valid,p.discount ORDER by sold desc";
             link += `sorting=${queryparams.sorting}&`
         }
 
