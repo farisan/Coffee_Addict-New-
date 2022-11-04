@@ -51,7 +51,7 @@ const login = (body) => {
                 // )
                 jwtr
                     .sign(payload, process.env.SECRET_KEY, {
-                        expiresIn: "5m",
+                        expiresIn: "1d",
                         issuer: process.env.ISSUER,
                     })
                     .then((token) => {
