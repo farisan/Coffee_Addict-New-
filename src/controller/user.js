@@ -70,7 +70,7 @@ const profile = async (req, res) => {
     try {
         // push all body lalu if disini mengubah body.image menjadi file.patch
         if (req.file) {
-            req.body.image = req.file.path;
+            req.body.image = `${req.file.filename}`;
         }
         console.log(req.body);
         const response = await userRepo.profile(req.body, req.userPayload.user_id);
