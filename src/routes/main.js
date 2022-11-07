@@ -10,7 +10,12 @@ const transactionsRouter = require("./transactions.js")
 
 const mainRouter = express.Router();
 
-
+// const {
+//     diskUpload,
+//     memoryUpload,
+//     errorHandler,
+// } = require("../middleware/upload");
+// const cloudinaryUploader = require("../middleware/cloudinary");
 
 const prefix = "/coffee";
 
@@ -24,8 +29,26 @@ mainRouter.use(`${prefix}/transactions`, transactionsRouter)      // localhost:6
 
 
 
-
-
+// ========= DEBUG AWAL CLOUDINARY =============
+// mainRouter.post(
+//     "/cloud",
+//     (req, res, next) =>
+//         memoryUpload.single("image")(req, res, (err) => {
+//             errorHandler(err, res, next);
+//         }),
+//     cloudinaryUploader,
+//     (req, res) => {
+//         console.log(req.file);
+//         res.status(200).json({
+//             msg: "Upload Success",
+//             data: {
+//                 url: req.file.url,
+//                 secure: req.file.secure_url,
+//                 data: req.file.filename,
+//             },
+//         });
+//     }
+// );
 
 
 

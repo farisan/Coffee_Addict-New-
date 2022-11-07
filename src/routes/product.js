@@ -6,24 +6,38 @@ const isLogin = require("../middleware/isLogin.js")
 const allowedRole = require("../middleware/allowedRole.js")
 const uploadimages = require("../middleware/upload.js")
 const sendResponse = require("../helper/response")
-const multer = require("multer");
-function uploadFile(req, res, next) {
-    const upload = uploadimages.single('image');
 
-    upload(req, res, function (err) {
+const cloudinaryUploader = require("../middleware/cloudinary");
+const multer = require("multer");
+const { diskUpload, memoryUpload } = require("../middleware/upload");
+function uploadFile(req, res, next) {
+    memoryUpload.single("image")(req, res, function (err) {
         if (err instanceof multer.MulterError) {
-            // Error limit size
-            // return res.json('Size image max 5mb')
-            return sendResponse.error(res, 415, 'Size image max 5mb')
+            console.log(err);
+            return res.status(400).json({ msg: err.message });
         } else if (err) {
-            // Error File format
-            // return res.json('Format image must png, jpg or jpeg!')
-            return sendResponse.error(res, 415, 'Format image must png, jpg or jpeg!')
+            return res.json({ msg: err.message });
         }
-        // Everything went fine. 
-        next()
-    })
+        next();
+    });
 }
+// function uploadFile(req, res, next) {
+//     const upload = uploadimages.single('image');
+
+//     upload(req, res, function (err) {
+//         if (err instanceof multer.MulterError) {
+//             // Error limit size
+//             // return res.json('Size image max 5mb')
+//             return sendResponse.error(res, 415, 'Size image max 5mb')
+//         } else if (err) {
+//             // Error File format
+//             // return res.json('Format image must png, jpg or jpeg!')
+//             return sendResponse.error(res, 415, 'Format image must png, jpg or jpeg!')
+//         }
+//         // Everything went fine. 
+//         next()
+//     })
+// }
 
 const { search, getid, create, edit, drop } = require("../controller/product.js")
 
@@ -33,8 +47,8 @@ const { search, getid, create, edit, drop } = require("../controller/product.js"
 
 productRouter.get("/", search);
 productRouter.get("/:id", getid);
-productRouter.post("/", isLogin(), allowedRole('admin'), uploadFile, create);
-productRouter.patch("/:id", isLogin(), allowedRole('admin'), uploadFile, edit);
+productRouter.post("/", isLogin(), allowedRole('admin'), uploadFile, cloudinaryUploader, create);
+productRouter.patch("/:id", isLogin(), allowedRole('admin'), uploadFile, cloudinaryUploader, edit);
 productRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
 
 

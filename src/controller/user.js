@@ -69,15 +69,19 @@ const editPasswords = async (req, res) => {
 const profile = async (req, res) => {
     try {
         // push all body lalu if disini mengubah body.image menjadi file.patch
+        // if (req.file) {
+        //     req.body.image = `${req.file.filename}`;
+        // }
         if (req.file) {
-            req.body.image = `${req.file.filename}`;
+            var image = `/${req.file.public_id}.${req.file.format}`; //ubah filename
+            req.body.image = req.file.secure_url
         }
-        console.log(req.body);
+
         const response = await userRepo.profile(req.body, req.userPayload.user_id);
-        // response.rows[0].image = `images/${req.file.filename}`
         sendResponse.success(res, 200, {
             msg: "Edit Profile Success",
             data: response.rows,
+            filename: image,
 
         })
     } catch (err) {
