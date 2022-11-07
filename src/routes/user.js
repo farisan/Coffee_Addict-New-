@@ -52,7 +52,7 @@ const { get, getId, register, profile, editPasswords, drop } = require("../contr
 
 // Routes Tabel Users
 usersRouter.get("/", isLogin(), allowedRole('admin'), get);
-usersRouter.get("/UserID", isLogin(), allowedRole('user'), getId);
+usersRouter.get("/UserID", isLogin(), allowedRole('user', 'admin'), getId);
 usersRouter.post("/", validate.body("email", "passwords", "phone_number"), register);
 usersRouter.patch("/profile", isLogin(), allowedRole('user'), uploadFile, cloudinaryUploader, validate.body('firstname', 'lastname', 'displayname', 'gender', 'birthday', 'address', 'image'), profile)
 usersRouter.patch("/editPasswords", isLogin(), allowedRole('admin', 'user'), validate.body('old_password', 'new_password'), editPasswords)
