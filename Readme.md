@@ -8,12 +8,37 @@
 
 ## BUILT WITH
 
-- Javascript
-- Database : `postgreSQL`
-- Node.JS
-- Express.JS
+<hr>
 
-#
+![nodejs](https://img.shields.io/badge/nodejs-18-brightgreen)
+![expressjs](https://img.shields.io/badge/expressjs-4-lightgrey)
+![postgreSQL](https://img.shields.io/badge/postgreSQL-14-blue)
+
+<br>
+
+## HOW TO USE
+
+<hr>
+
+1. Clone this repository.
+
+   ```
+   $ git clone https://github.com/farisan/Coffee_Addict-New-.git
+   ```
+
+2. Open VS Code or you can download and install it [here](https://code.visualstudio.com/).
+
+3. Open menu **Terminal > New Terminal** or press **ctrl+shift+`**
+
+4. On terminal, change directory to **coffee-time** then run
+
+   ```
+   $ npm run dev
+   ```
+
+5. Enjoy the app!
+
+<br>
 
 ## ENDPOINT DETAILS
 
