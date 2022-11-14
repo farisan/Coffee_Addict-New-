@@ -4,7 +4,7 @@ const postgreDb = require("../config/postgre")
 
 const get = () => {
     return new Promise((resolve, reject) => {
-        const query = "select product.name, promo.code, promo.discount, promo.valid, promo.create_at, promo.update_at from promo inner join product on product.id = promo.product_id";
+        const query = "select promo.*, product.name, product.category, product.size, product.price, product.stock, product.image, product.description from promo inner join product on product.id = promo.product_id";
         postgreDb.query(query, (err, result) => {
             if (err) {
                 console.log(err);
