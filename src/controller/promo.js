@@ -16,6 +16,18 @@ const get = async (req, res) => {
     }
 };
 
+const getid = async (req, res) => {
+    try {
+        const response = await promoRepo.getid(req.params)
+        // console.log(response);
+        sendResponse.success(res, 200, {
+            data: response.rows
+        })
+    } catch (err) {
+        sendResponse.error(res, 500, "Internal Server Error")
+    }
+}
+
 const search = async (req, res) => {
     try {
         console.log(req.query);
@@ -72,6 +84,7 @@ const drop = async (req, res) => {
 
 const promoController = {
     get,
+    getid,
     search,
     create,
     edit,

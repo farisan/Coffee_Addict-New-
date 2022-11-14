@@ -16,6 +16,19 @@ const get = () => {
 }
 
 
+const getid = (params) => {
+    return new Promise((resolve, reject) => {
+        const query = "select promo.*, product.* from promo inner join product on promo.product_id = product.id where promo.id = $1";
+        postgreDb.query(query, [params.id], (err, result) => {
+            if (err) {
+                console.log(err);
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+};
+
 const searchPromo = (queryparams) => {
     return new Promise((resolve, reject) => {
         const query = "select promo.id, promo.product_id, product.name, promo.* from promo inner join product on product.id = promo.product_id where lower(code) LIKE lower($1)";
@@ -89,6 +102,7 @@ const drop = (params) => {
 
 const promoRepo = {
     get,
+    getid,
     searchPromo,
     create,
     edit,
