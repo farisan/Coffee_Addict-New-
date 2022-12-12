@@ -34,7 +34,7 @@ const historyTransactions = (queryparams, token) => {
     return new Promise((resolve, reject) => {
 
 
-        let query = "select users.email, product.name, product.image, transactions.qty, transactions.tax, transactions.method_payment, transactions.total, transactions.status from transactions inner join users on users.id = transactions.user_id inner join product on product.id = transactions.product_id where users.id = $1";
+        let query = "select transactions.id, users.email, product.name, product.image, transactions.qty, transactions.tax, transactions.method_payment, transactions.total, transactions.status from transactions inner join users on users.id = transactions.user_id inner join product on product.id = transactions.product_id where users.id = $1";
 
         let queryLimit = "";
         let link = `http://localhost:6060/coffee/transactions/history?`

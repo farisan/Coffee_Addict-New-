@@ -18,7 +18,7 @@ transactionsRouter.get("/", isLogin(), allowedRole('admin'), get);
 transactionsRouter.get("/history", isLogin(), allowedRole('user'), history)
 transactionsRouter.post("/", isLogin(), allowedRole('user'), create);
 transactionsRouter.patch("/:id", isLogin(), allowedRole('admin'), edit);
-transactionsRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
+transactionsRouter.delete("/:id", isLogin(), allowedRole('user'), drop);
 
 
 module.exports = transactionsRouter;
