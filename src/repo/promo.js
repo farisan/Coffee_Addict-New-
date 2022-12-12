@@ -31,17 +31,20 @@ const getid = (params) => {
 
 const searchPromo = (queryparams) => {
     return new Promise((resolve, reject) => {
-        const query = "select promo.id, promo.product_id, product.name, promo.* from promo inner join product on product.id = promo.product_id where lower(code) LIKE lower($1)";
-        const { code } = queryparams;
-        postgreDb.query(query, [`%${code}%`], (err, result) => {
-            if (err) {
-                console.log(err);
-                return reject(err);
-            }
-            return resolve(result);
-        });
+      const { code, product_id } = queryparams;
+      let query = `select promo.id, promo.product_id, product.name, promo.* from promo inner join product on product.id = promo.product_id where product.id = $1`;
+      if (code) {
+        query += ` and lower(promo.code) = lower('${code}') `;
+      }
+      postgreDb.query(query, [product_id], (err, result) => {
+        if (err) {
+          console.log(err);
+          return reject(err);
+        }
+        return resolve(result);
+      });
     });
-}
+  };
 
 const create = (body) => {
     return new Promise((resolve, reject) => {
