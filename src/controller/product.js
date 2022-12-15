@@ -6,7 +6,7 @@ const sendResponse = require("../helper/response")
 
 const search = async (req, res) => {
     try {
-        const hostApi = `${req.protocol}://${req.hostname}:6060`;
+        const hostApi = `${req.protocol}://${req.hostname}`;
         const response = await productRepo.search(req.query, hostApi)
         sendResponse.success(res, 200, response)
     } catch (err) {
