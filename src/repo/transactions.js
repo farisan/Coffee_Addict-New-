@@ -168,12 +168,42 @@ const dropTransactions = (params) => {
     });
 };
 
+const getByStatus = () => {
+    return new Promise((resolve, reject) => {
+      const query =
+        "select transactions.id,profile.displayname, transactions.qty,transactions.total,transactions.status from transactions inner join users on transactions.user_id = users.id inner join profile on users.id = profile.users_id where transactions.status = 'paid' or transactions.status ='pending' order by transactions.create_at DESC";
+      postgreDb.query(query, (err, result) => {
+        if (err) {
+          console.log(err);
+          return reject(err);
+        }
+        return resolve(result);
+      });
+    });
+  };
+  
+  const statusApprove = (status, id) => {
+      return new Promise((resolve, reject) => {
+          const query =
+            "update transactions set status = $1 where id = $2";
+          postgreDb.query(query,[status, id], (err, result) => {
+            if (err) {
+              console.log(err);
+              return reject(err);
+            }
+            return resolve(result);
+          });
+        });
+  }
+
 const transactionsRepo = {
     getALL,
     historyTransactions,
     createTransactions,
     editTransactions,
-    dropTransactions
+    dropTransactions,
+    statusApprove,
+    getByStatus
 }
 
 module.exports = transactionsRepo;
