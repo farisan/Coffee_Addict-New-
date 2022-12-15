@@ -171,7 +171,7 @@ const dropTransactions = (params) => {
 const getByStatus = () => {
     return new Promise((resolve, reject) => {
       const query =
-        "select transactions.id,profile.displayname, transactions.qty,transactions.total,transactions.status from transactions inner join users on transactions.user_id = users.id inner join profile on users.id = profile.users_id where transactions.status = 'paid' or transactions.status ='pending' order by transactions.create_at DESC";
+        "select transactions.id,profile.displayname, transactions.qty,transactions.total,product.name,transactions.status from transactions inner join users on transactions.user_id = users.id inner join profile on users.id = profile.users_id inner join product on transactions.product_id = product.id where transactions.status = 'paid' or transactions.status ='pending' order by transactions.create_at DESC";
       postgreDb.query(query, (err, result) => {
         if (err) {
           console.log(err);
