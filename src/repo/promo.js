@@ -46,12 +46,12 @@ const searchPromo = (queryparams) => {
     });
   };
 
-const create = (body) => {
+  const create = (body,file) => {
     return new Promise((resolve, reject) => {
-        const query = "insert into promo ( product_id, code, discount, valid) values ($1,$2,$3,$4)"
-        const { product_id, code, discount, valid } = body;
+        const query = "insert into promo ( product_id, code, discount, valid,image,hex_color) values ($1,$2,$3,$4,$5,$6) returning *"
+        const { product_id, code, discount, valid , color} = body;
         postgreDb.query(
-            query, [product_id, code, discount, valid], (err, queryResult) => {
+            query, [product_id, code, discount, valid, file, color], (err, queryResult) => {
                 if (err) {
                     console.log(err);
                     return reject(err);
@@ -69,7 +69,7 @@ const edit = (body, params) => {
         // menggunakan perulangan untuk dapat melakukan pengubahan semua data pada table product
         Object.keys(body).forEach((key, idx, array) => {
             if (idx === array.length - 1) {
-                query += `${key} = $${idx + 1} where id = $${idx + 2}`;
+                query += `${key} = $${idx + 1} where id = $${idx + 2} returning *`;
                 values.push(body[key], params.id);
                 return;
             }
@@ -87,7 +87,6 @@ const edit = (body, params) => {
             });
     });
 }
-
 
 const drop = (params) => {
     return new Promise((resolve, reject) => {
