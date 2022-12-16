@@ -6,7 +6,7 @@ const search = (queryparams, hostAPI) => {
     return new Promise((resolve, reject) => {
 
 
-        let query = "select product.*, promo.code, promo.discount from product full join promo on promo.product_id = product.id ";
+        let query = "select * from product ";
 
         let queryLimit = "";
         let link = `${hostAPI}/coffee/product?`
@@ -46,7 +46,7 @@ const search = (queryparams, hostAPI) => {
             link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "favorite") {
-            query = "select pr.*,p.code,p.valid,p.discount,COALESCE(sum(tr.qty),0) as sold from product pr left join promo p on pr.id = p.product_id left join transactions tr on pr.id = tr.product_id GROUP BY pr.id,p.code,p.valid,p.discount ORDER by sold desc";
+            query = "select pr.*, COALESCE(sum(tr.qty),0) as sold from product pr left join transactions tr on pr.id = tr.product_id GROUP BY pr.id ORDER by sold desc";
             link += `sorting=${queryparams.sorting}&`
         }
 
