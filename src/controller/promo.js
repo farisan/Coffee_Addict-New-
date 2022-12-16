@@ -86,7 +86,7 @@ const edit = async (req, res) => {
       req.params,
     );
     sendResponse.success(res, 200, {
-      msg: "Create Promo Success",
+      msg: "Edit Promo Success",
       data: result.rows,
       filename: image,
     });
