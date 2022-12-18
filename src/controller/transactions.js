@@ -27,9 +27,10 @@ const history = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        await transactionsRepo.createTransactions(req.body, req.userPayload.user_id)
+        const response = await transactionsRepo.createTransactions(req.body, req.userPayload.user_id)
         sendResponse.success(res, 200, {
-            data: "Create data success"
+            msg: "Create data success",
+            data: response.rows
         })
     } catch (err) {
         sendResponse.error(res, 500, "Internal Server Error")
