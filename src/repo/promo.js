@@ -18,7 +18,7 @@ const get = () => {
 
 const getid = (params) => {
     return new Promise((resolve, reject) => {
-        const query = "select promo.*, product.* from promo inner join product on promo.product_id = product.id where promo.id = $1";
+        const query = "select product.name, promo.*  from promo inner join product on promo.product_id = product.id where promo.id = $1";
         postgreDb.query(query, [params.id], (err, result) => {
             if (err) {
                 console.log(err);
