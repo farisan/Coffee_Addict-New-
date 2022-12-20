@@ -115,19 +115,47 @@ const historyTransactions = (queryparams, token) => {
 
 const createTransactions = (body, token) => {
     return new Promise((resolve, reject) => {
-        const query = "insert into transactions (user_id, product_id, promo_id, delivery_id, method_payment, qty, tax, total, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning id"
-        const { product_id, promo_id, delivery_id, method_payment, qty, tax, total, status } = body;
-        postgreDb.query(
-            query, [token, product_id, promo_id, delivery_id, method_payment, qty, tax, total, status], (err, queryResult) => {
-                if (err) {
-                    console.log(err);
-                    return reject(err);
-                }
-                resolve(queryResult);
+      const query =
+        "insert into transactions (user_id, product_id, promo_id, delivery_id, method_payment, qty, tax, total, status) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning product_id";
+      const {
+        product_id,
+        promo_id,
+        delivery_id,
+        method_payment,
+        qty,
+        tax,
+        total,
+        status,
+      } = body;
+      postgreDb.query(
+        query,
+        [
+          token,
+          product_id,
+          promo_id,
+          delivery_id,
+          method_payment,
+          qty,
+          tax,
+          total,
+          status,
+        ],
+        (err, queryResult) => {
+          if (err) {
+            console.log(err);
+            return reject(err);
+          }const getQuery ="select * from product where id = $1"
+          postgreDb.query(getQuery,[queryResult.rows[0].product_id], (err,result) => {
+            if (err) {
+              console.log(err);
+              return reject (err)
             }
-        )
-    })
-}
+            resolve(result.rows[0])
+          })
+        }
+      );
+    });
+  };
 
 const editTransactions = (body, params) => {
     return new Promise((resolve, reject) => {
