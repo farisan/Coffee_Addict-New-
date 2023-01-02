@@ -2,6 +2,8 @@
 const userRepo = require("../repo/user.js");
 const sendResponse = require("../helper/response.js");
 const response = require("../helper/response.js");
+const { sendMail } = require("../helper/mail");
+const { forgotMail } = require("../helper/forgotMail");
 /* ============================================================== */
 
 // Menampilkan semua values yang ada pada table users
@@ -33,18 +35,25 @@ const getId = async (req, res) => {
 // register users
 const register = async (req, res) => {
     try {
-        console.log(req.body);
-        const response = await userRepo.register(req.body);
-        sendResponse.success(res, 200, {
-            msg: "Register Success",
-            data: response.data
-        })
-
+      console.log(req.body);
+      const response = await userRepo.register(req.body);
+      const setSendEmail = {
+        to: req.body.email,
+        subject: "Email Verification !",
+        // template: "verificationEmail.html",
+        template: "verificationEmail.html",
+        buttonUrl: `https://lepisa-fe.vercel.app/auth/${response.data.pinactivation}`,
+      };
+      await sendMail(setSendEmail);
+      sendResponse.success(res, 200, {
+        msg: "please check your email",
+        data: response.data,
+      });
     } catch (err) {
-        console.log(err);
-        sendResponse.error(res, 500, err.message)
+      console.log(err);
+      sendResponse.error(res, 500, err.message);
     }
-};
+  };
 
 
 // edit password
@@ -102,6 +111,57 @@ const drop = async (req, res) => {
     }
 }
 
+const updateStatus = async (req, res) => {
+    try {
+      const { id } = req.params;
+      await userRepo.updateStatus(id);
+      sendResponse.success(res, 200, {
+        msg: "success active account",
+      });
+    } catch (error) {
+      console.log(error);
+      sendResponse(res, 500, err.message);
+    }
+  };
+
+
+  const forgotPassword = async (req, res) => {
+    try {
+      const response = await userRepo.forgotPassword(req.params.email);
+      const setSendEmail = {
+        to: req.params.email,
+        subject: " Reset Pasword",
+        mail:req.params.email,
+        template: "forgotEmail.html",
+        otp: `${response.data}`,
+      };
+      await forgotMail(setSendEmail);
+      sendResponse.success(res, 200, {
+        msg: "please check your email",
+      });
+    } catch (objErr) {
+      console.log(objErr)
+      const message = objErr.err.message || "internal server error";
+      const statusCode = objErr.statusCode || 500;
+      sendResponse.error(res, statusCode, { msg: message });
+    }
+  };
+  
+  const forgotChange = async (req, res) => {
+    try {
+      const { otp, password } = req.body;
+      console.log(req.body);
+      await userRepo.changeForgot(otp, password);
+      sendResponse.success(res, 200, {
+        msg: "password was changed",
+      });
+    } catch (objErr) {
+      const statusCode = objErr.statusCode || 500;
+      const message = objErr.err.message || "internal server error";
+      sendResponse.error(res, statusCode, { msg: message });
+    }
+  };
+
 // Nama function di atas di bungkus menjadi object
 const userController = {
     get,
@@ -109,7 +169,10 @@ const userController = {
     register,
     editPasswords,
     profile,
-    drop
+    drop,
+    updateStatus,
+    forgotPassword,
+    forgotChange
 }
 
 module.exports = userController;

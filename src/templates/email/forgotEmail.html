@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Rubik:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <title>Hi {{mail}}</title>
+  <style>
+    * {
+      font-family: sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+      /* background: #c82022; */
+      line-height: 60px;
+      margin: 30px auto;
+      color: #000000;
+    }
+
+    .link {
+      display: inline-block;
+      width: 250px;
+      height: 40px;
+      line-height: 40px;
+      text-decoration: none;
+      color: #ffffff !important;
+      font-weight: bold;
+      text-align: center;
+      margin-left: 37%;
+      border-radius: 10px;
+    }
+
+    .link-1 {
+      text-decoration: none;
+    }
+
+    span {
+      color: rgba(255, 19, 19, 0.932);
+    }
+
+    .OTP {
+      font-family: 'Rubik';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 35px;
+      line-height: 45px;
+      color: black;
+      text-align: center;
+      padding-top: 30px;
+    }
+    .notice-1 {
+      font-family: 'Rubik';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      /* line-height: 45px; */
+      color: black;
+      text-align: center;
+      padding-top: 30px;
+    }
+    .notice-2 {
+      font-family: 'Rubik';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      /* line-height: 45px; */
+      color: black;
+      text-align: center;
+      padding-top: 10px;
+    }
+    .notice-3 {
+      font-family: 'Rubik';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      /* line-height: 45px; */
+      color: black;
+      text-align: left;
+      padding-top: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <h2>Hi, {{mail}}></a></h2>
+          <p>Kami telah menerima permintaanmu untuk perubahan password akun Lepisa.
+            silahkan masukan code <span>{{otp}}</span> pada saat reset password</p> -->
+  <div class="">
+    <p class="OTP">{{otp}}</p>
+    <i class="notice-1">Above is the otp code to change the password. please never tell anyone because this is personal data.</i>
+    <i class="notice-2">Enter the fogot password page number on the web coffee shop if you want to change a new password</i>
+    <p class="notice-3">Do not reply to this message as this email is automated</p>
+  </div>
+</body>
+
+</html>

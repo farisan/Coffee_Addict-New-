@@ -44,7 +44,7 @@ function uploadFile(req, res, next) {
 // }
 
 
-const { get, getId, register, profile, editPasswords, drop } = require("../controller/user.js");
+const { get, getId, register, profile, editPasswords, drop, updateStatus, forgotPassword, forgotChange } = require("../controller/user.js");
 
 
 
@@ -57,6 +57,9 @@ usersRouter.post("/", validate.body("email", "passwords", "phone_number"), regis
 usersRouter.patch("/profile", isLogin(), allowedRole('user'), uploadFile, cloudinaryUploader, validate.body('firstname', 'lastname', 'displayname', 'gender', 'birthday', 'address', 'image'), profile)
 usersRouter.patch("/editPasswords", isLogin(), allowedRole('admin', 'user'), validate.body('old_password', 'new_password'), editPasswords)
 usersRouter.delete("/", isLogin(), allowedRole('user'), drop)
+usersRouter.get("/verify/:id",updateStatus)
+usersRouter.patch("/forgot/:email",forgotPassword)
+usersRouter.patch('/changePwd',forgotChange)
 
 
 module.exports = usersRouter;
