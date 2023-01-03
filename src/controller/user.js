@@ -42,7 +42,7 @@ const register = async (req, res) => {
         subject: "Email Verification !",
         // template: "verificationEmail.html",
         template: "verificationEmail.html",
-        buttonUrl: `https://lepisa-fe.vercel.app/auth/${response.data.pinactivation}`,
+        buttonUrl: `https://coffeeaddictfe.vercel.app/auth/${response.data.pinactivation}`,
       };
       await sendMail(setSendEmail);
       sendResponse.success(res, 200, {
