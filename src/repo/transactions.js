@@ -3,7 +3,7 @@ const postgreDb = require("../config/postgre.js")
 
 const getALL = () => {
     return new Promise((resolve, reject) => {
-        const query = "select users.email, product.name, promo.code, delivery.method, transactions.qty, transactions.tax, transactions.total, transactions.status from transactions inner join users on transactions.user_id = users.id inner join product on transactions.product_id = product.id full join promo on promo.id = transactions.promo_id inner join delivery on delivery.id = transactions.delivery_id where transactions.user_id = users.id order by transactions.id asc";
+        const query = "select users.email, product.image, product.name, promo.code, delivery.method, transactions.qty, transactions.tax, transactions.total, transactions.status from transactions inner join users on transactions.user_id = users.id inner join product on transactions.product_id = product.id full join promo on promo.id = transactions.promo_id inner join delivery on delivery.id = transactions.delivery_id where transactions.user_id = users.id order by transactions.id asc";
         postgreDb.query(query, (err, result) => {
             if (err) {
                 console.log(err);
