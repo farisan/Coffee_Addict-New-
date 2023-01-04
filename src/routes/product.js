@@ -49,7 +49,7 @@ productRouter.get("/", search);
 productRouter.get("/:id", getid);
 productRouter.post("/", isLogin(), allowedRole('admin'), uploadFile, cloudinaryUploader, create);
 productRouter.patch("/:id", isLogin(), allowedRole('admin'), uploadFile, cloudinaryUploader, edit);
-productRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
+productRouter.patch("/delete/:id", isLogin(), allowedRole('admin'), drop);
 
 
 

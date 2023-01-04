@@ -1,7 +1,7 @@
 const postgreDb = require("../config/postgre")
 
 
-// Get all
+// Get search
 const search = (queryparams, hostAPI) => {
     return new Promise((resolve, reject) => {
 
@@ -9,12 +9,12 @@ const search = (queryparams, hostAPI) => {
         let query = "select * from product ";
 
         let queryLimit = "";
-        let link = `${hostAPI}/coffee/product?`
+        let link = `${hostAPI}/api/product?`
 
 
         // Search name product
         if (queryparams.name_product) {
-            query += `where lower(name) like lower('%${queryparams.name_product}%')`
+            query += `where lower(name) like lower('%${queryparams.name_product}%') and product.delete_at is null`
             link += `name_product=${queryparams.name_product}&`
         }
 
@@ -24,7 +24,7 @@ const search = (queryparams, hostAPI) => {
                 query += `and lower(category) like lower('${queryparams.category}')`;
                 link += `category=${queryparams.category}&`
             } else {
-                query += `where lower(category) like lower('${queryparams.category}')`;
+                query += `where lower(category) like lower('${queryparams.category}') and product.delete_at is null `;
                 link += `category=${queryparams.category}&`
             }
         }
@@ -46,7 +46,7 @@ const search = (queryparams, hostAPI) => {
             link += `sorting=${queryparams.sorting}&`
         }
         if (queryparams.sorting == "favorite") {
-            query = "select pr.*, COALESCE(sum(tr.qty),0) as sold from product pr left join transactions tr on pr.id = tr.product_id GROUP BY pr.id ORDER by sold desc";
+            query = "select pr.*, COALESCE(sum(tr.qty),0) as sold from product pr left join transactions tr on pr.id = tr.product_id where product.delete_at is null GROUP BY pr.id ORDER by sold desc";
             link += `sorting=${queryparams.sorting}&`
         }
 
@@ -178,8 +178,10 @@ const edit = (body, params) => {
 
 const drop = (params) => {
     return new Promise((resolve, reject) => {
-        const query = "delete from product where id = $1 returning *";
-        postgreDb.query(query, [params.id], (err, result) => {
+        const {id} = params
+        const timestamp = Date.now() / 1000;
+        const query = "update product set delete_at = to_timestamp($1) where id = $2";
+        postgreDb.query(query, [timestamp , id], (err, result) => {
             if (err) {
                 console.log(err);
                 return reject(err);
@@ -188,6 +190,7 @@ const drop = (params) => {
         });
     });
 };
+
 
 
 

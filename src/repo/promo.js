@@ -4,7 +4,7 @@ const postgreDb = require("../config/postgre")
 
 const get = () => {
     return new Promise((resolve, reject) => {
-        const query = "select promo.*, product.name, product.category, product.size, product.price, product.stock from promo inner join product on product.id = promo.product_id";
+        const query = "select promo.*, product.name, product.category, product.size, product.price, product.stock from promo inner join product on product.id = promo.product_id where promo.delete_at is null";
         postgreDb.query(query, (err, result) => {
             if (err) {
                 console.log(err);
@@ -32,7 +32,7 @@ const getid = (params) => {
 const searchPromo = (queryparams) => {
     return new Promise((resolve, reject) => {
       const { code, product_id } = queryparams;
-      let query = `select promo.id, promo.product_id, product.name, promo.* from promo inner join product on product.id = promo.product_id where product.id = $1`;
+      let query = `select promo.id, promo.product_id, product.name, promo.* from promo inner join product on product.id = promo.product_id where product.id = $1 and promo.delete_at is null`;
       if (code) {
         query += ` and lower(promo.code) = lower('${code}') `;
       }
@@ -90,8 +90,9 @@ const edit = (body, params) => {
 
 const drop = (params) => {
     return new Promise((resolve, reject) => {
-        const query = "delete from promo where id = $1";
-        postgreDb.query(query, [params.id], (err, result) => {
+        const query = "update promo set delete_at = to_timestamp($1) where id = $2";
+        const timestamp = Date.now() / 1000;
+        postgreDb.query(query, [timestamp,params.id], (err, result) => {
             if (err) {
                 console.log(err);
                 return reject(err);

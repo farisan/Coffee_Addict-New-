@@ -32,7 +32,7 @@ promoRouter.get("/promo/:id", getid);
 promoRouter.get("/", search)
 promoRouter.post("/", isLogin(), allowedRole('admin'),uploadFile,cloudinaryUploader, create);
 promoRouter.patch("/:id", isLogin(), allowedRole('admin'), uploadFile, cloudinaryUploader, edit);
-promoRouter.delete("/:id", isLogin(), allowedRole('admin'), drop);
+promoRouter.patch("/delete/:id", isLogin(), allowedRole('admin'), drop);
 
 
 
