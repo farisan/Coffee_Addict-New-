@@ -9,7 +9,7 @@ const search = (queryparams, hostAPI) => {
         let query = "select * from product ";
 
         let queryLimit = "";
-        let link = `${hostAPI}/api/product?`
+        let link = `${hostAPI}/coffee/product?`
 
 
         // Search name product
