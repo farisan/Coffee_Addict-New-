@@ -8,8 +8,6 @@
 
 ## BUILT WITH
 
-<hr>
-
 ![nodejs](https://img.shields.io/badge/nodejs-18-brightgreen)
 ![expressjs](https://img.shields.io/badge/expressjs-4-lightgrey)
 ![postgreSQL](https://img.shields.io/badge/postgreSQL-14-blue)
@@ -18,12 +16,10 @@
 
 ## HOW TO USE
 
-<hr>
-
 1. Clone this repository.
 
    ```
-   $ git clone https://github.com/farisan/Coffee_Addict-New-.git
+   git clone https://github.com/farisan/Coffee_Addict-New-.git
    ```
 
 2. Open VS Code or you can download and install it [here](https://code.visualstudio.com/).
@@ -33,7 +29,7 @@
 4. On terminal, change directory to **coffee-time** then run
 
    ```
-   $ npm run dev
+   npm run dev
    ```
 
 5. Enjoy the app!
@@ -55,3 +51,9 @@
 ## POSTMAN DOCUMENTATION
 
 [Postman](https://documenter.getpostman.com/view/12793513/2s847BSvAt)
+
+## Related Project
+
+- Coffee Addict Web (React JS) [`here`](https://coffeeaddictfe.vercel.app/)
+- Coffee Addict Mobile (React Native) [`here`](https://drive.google.com/drive/u/0/folders/1sumO8tA9uoVsipS4rpd69d4Gvrqv4EDK)
+- Backend Coffee Addict [`here`](https://github.com/farisan/Coffee_Addict-New-)
