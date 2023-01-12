@@ -13,9 +13,9 @@ function uploadFile(req, res, next) {
     memoryUpload.single("image")(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             console.log(err);
-            return res.status(400).json({ msg: err.message });
+            return res.status(400).json({ msg: "Size to large" });
         } else if (err) {
-            return res.json({ msg: err.message });
+            return res.json({ msg: "Format Wrong" });
         }
         next();
     });
