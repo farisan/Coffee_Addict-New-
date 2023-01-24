@@ -55,5 +55,4 @@
 ## Related Project
 
 - Coffee Addict Web (React JS) [`here`](https://coffeeaddictfe.vercel.app/)
-- Coffee Addict Mobile (React Native) [`here`](https://drive.google.com/drive/u/0/folders/1sumO8tA9uoVsipS4rpd69d4Gvrqv4EDK)
-- Backend Coffee Addict [`here`](https://github.com/farisan/Coffee_Addict-New-)
+- Coffee Addict Mobile (React Native) [`here`](https://github.com/farisan/coffee-addict-native)
